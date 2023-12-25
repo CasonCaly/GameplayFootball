@@ -151,13 +151,14 @@ void MenuTask::ProcessPhase() {
       //Properties properties;
       //properties.SetBool("isInGame", false);
       //windowManager->GetPageFactory()->CreatePage((int)e_PageID_ControllerSelect, properties, 0);
-      windowManager->GetPageFactory()->CreatePage(e_PageID_TeamSelect, properties, 0);
+      //windowManager->GetPageFactory()->CreatePage(e_PageID_TeamSelect, properties, 0);
       //CreatePage(e_PageID_TeamSelect);
       
       //  windowManager->GetPageFactory()->CreatePage((int)e_PageID_MainMenu, properties, 0);
       // } else {
       //   windowManager->GetPageFactory()->CreatePage((int)e_PageID_Intro, properties, 0);
       // }
+      windowManager->GetPageFactory()->CreatePage((int)e_PageID_LoadingMatch, properties, 0);
     } else {
       windowManager->GetPageFactory()->CreatePage((int)e_PageID_LoadingMatch, properties, 0);
     }

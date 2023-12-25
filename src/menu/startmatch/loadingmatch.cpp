@@ -18,7 +18,7 @@ LoadingMatchPage::LoadingMatchPage(Gui2WindowManager *windowManager, const Gui2P
   loading->Show();
 
   // logos
-  MatchData *matchData = new MatchData(GetMenuTask()->GetTeamID(0), GetMenuTask()->GetTeamID(1));
+  MatchData *matchData = new MatchData(2, 2);
   GetMenuTask()->SetMatchData(matchData);
   TeamData *teamData1 = matchData->GetTeamData(0);
   TeamData *teamData2 = matchData->GetTeamData(1);
