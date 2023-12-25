@@ -6,7 +6,7 @@
 
 #include "base/log.hpp"
 
-#include "sqlite3.h"
+#include "libs/sqlite3/sqlite3.h"
 
 namespace blunted {
 

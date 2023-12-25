@@ -11,7 +11,7 @@ else(${VERSION_PATCH})
    set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 endif(${VERSION_PATCH})
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 project(GameplayFootball)
 
@@ -23,6 +23,14 @@ if(UNIX)
    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -Wno-strict-aliasing")
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3")
 endif(UNIX)
+
+if(MSVC)
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -GL")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -LTCG")
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -LTCG")
+   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -LTCG")
+endif(MSVC)
+
 # SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -fPIC -g -O3")
 # SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fPIC -O3 -g")
 
@@ -33,23 +41,20 @@ include_directories(${OPENGL_INCLUDE_DIR})
 FIND_PACKAGE(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
-FIND_PACKAGE(SDL2_image REQUIRED)
-include_directories(${SDL2_IMAGE_DIRS})
+#FIND_PACKAGE(SDL2-image REQUIRED)
+#include_directories(${SDL2_IMAGE_DIRS})
 
-FIND_PACKAGE(SDL2_ttf REQUIRED)
-include_directories(${SDL2_TTF_DIRS})
+#FIND_PACKAGE(SDL2-ttf REQUIRED)
+#include_directories(${SDL2_TTF_DIRS})
 
-FIND_PACKAGE(SDL2_gfx REQUIRED)
-include_directories(${SDL2_GFX_DIRS})
+#FIND_PACKAGE(SDL2-gfx REQUIRED)
+#include_directories(${SDL2_GFX_DIRS})
 
 FIND_PACKAGE(Boost REQUIRED COMPONENTS system thread filesystem)
 include_directories(${Boost_INCLUDE_DIR})
 
 FIND_PACKAGE(OpenAL REQUIRED)
 include_directories(${OPENAL_INCLUDE_DIR})
-
-FIND_PACKAGE(SQLite3 REQUIRED)
-include_directories(${SQLite3_INCLUDE_DIRS})
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
@@ -89,7 +94,8 @@ set(OWN_LIBRARIES $<TARGET_OBJECTS:baselib> $<TARGET_OBJECTS:systemscommonlib>
         $<TARGET_OBJECTS:utilslib> $<TARGET_OBJECTS:gui2lib>)
 
 # Join all created static libraries into the single static one.
-add_library(blunted2 ${BLUNTED_CORE_SOURCES} ${BLUNTED_CORE_HEADERS} ${OWN_LIBRARIES})
+add_library(blunted2 ${BLUNTED_CORE_SOURCES} ${LIBS_SOURCES} ${BLUNTED_CORE_HEADERS}
+        ${ALL_LIBS_HEADERS} ${OWN_LIBRARIES})
 
 add_library(leaguelib ${LEAGUE_SOURCES} ${LEAGUE_HEADERS})
 add_library(gamelib ${GAME_SOURCES} ${GAME_HEADERS})
@@ -98,9 +104,9 @@ add_library(menulib ${MENU_SOURCES} ${MENU_HEADERS})
 add_library(datalib ${DATA_SOURCES} ${DATA_HEADERS})
 
 set(LIBRARIES gamelib hidlib menulib datalib leaguelib blunted2
-   Boost::filesystem Boost::system Boost::thread SQLite::SQLite3
-   ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_GFX_LIBRARIES}
-   ${SDL2_LIBRARIES} ${OPENAL_LIBRARY} dl m ${OPENGL_LIBRARIES})
+   ${Boost_LIBRARIES} SDL2::SDL2 SDL2::SDL2main SDL2::SDL2_image SDL2::SDL2_ttf SDL2::SDL2_gfx
+   ${OPENAL_LIBRARY} ${OPENGL_LIBRARY})
+
 
 add_executable(gameplayfootball WIN32 ${CORE_SOURCES} ${CORE_HEADERS})
 target_link_libraries(gameplayfootball ${LIBRARIES})
